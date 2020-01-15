@@ -27,15 +27,32 @@ class Clip:
     def __str__(self):
         return f'name: {self.name}, start_time: {self.start_time}, end_time: {self.end_time}'
 
+class ManifestEntry:
+    def __init__(self, output_file, source_file, clip):
+        self.output_file = output_file
+        self.source_file = source_file
+        self.clip = clip
+
+    def __str__(self):
+        result = ''
+        result += f'{self.output_file}\n'
+        result += f'  source: {self.source_file}\n'
+        result += f'  name: {self.clip.name}\n'
+        result += f'  start_time: {self.clip.start_time}\n'
+        result += f'  end_time: {self.clip.end_time}\n'
+        return result
+
 class ClipExtractor:
     def __init__(self, arguments):
         self.arguments = arguments
+        self.manifest = []
 
     def extract_clips(self):
         if not os.path.isdir(self.arguments.output):
             os.makedirs(self.arguments.output)
         meta_files = self.find_meta_files(self.arguments.source)
         self.process_files(meta_files)
+        self.write_manifest()
 
     def find_meta_files(self, source_folder):
         return glob.glob(source_folder + '**/*.txt', recursive=True)
@@ -67,6 +84,7 @@ class ClipExtractor:
         LOG(f'  Processing clip <{clip}>')
         output_file_path = self.get_output_file_path(clip, input_file_path)
         self.convert_clip(clip, input_file_path, output_file_path)
+        self.manifest.append(ManifestEntry(output_file_path, input_file_path, clip))
 
     def get_output_file_path(self, clip, input_file_path):
         source_file_name = os.path.splitext(os.path.basename(input_file_path))[0]
@@ -78,6 +96,11 @@ class ClipExtractor:
             timestamp_to_seconds(clip.start_time),
             timestamp_to_seconds(clip.end_time),
             targetname=output_file_path)
+
+    def write_manifest(self):
+        with open(os.path.join(self.arguments.output, 'manifest.txt'), 'w') as file:
+            for entry in self.manifest:
+                file.write(f'{entry}\n')
 
 if __name__ == '__main__':
     ClipExtractor(parse_arguments()).extract_clips()
