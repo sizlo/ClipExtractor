@@ -12,7 +12,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source', type=str, help='Source folder to process', required=True)
     parser.add_argument('--output', type=str, help='Output folder to create clips in', required=True)
-    parser.add_argument('--name-pattern', type=str, default='{source}_{name}.mp4',
+    parser.add_argument('--name-pattern', type=str, default='{name}.mp4',
         help='Pattern used for the clip filenames. Allowed tokens are "{source}", "{name}", "{start_time}" and "{end_time}"')
     return parser.parse_args()
 
