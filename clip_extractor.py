@@ -55,7 +55,7 @@ class ClipExtractor:
         self.write_manifest()
 
     def find_meta_files(self, source_folder):
-        return glob.glob(source_folder + '**/*.txt', recursive=True)
+        return glob.glob(source_folder + '**/*.clips', recursive=True)
 
     def process_files(self, files):
         for file in files:
@@ -76,7 +76,7 @@ class ClipExtractor:
     def find_video_file(self, meta_file_path):
         extentions_to_try = ['.mp4', '.mov']
         for extention in extentions_to_try:
-            video_file_path = meta_file_path[:-4] + extention
+            video_file_path = os.path.splitext(meta_file_path)[0] + extention
             if os.path.isfile(video_file_path):
                 return video_file_path
 
