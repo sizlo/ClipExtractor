@@ -89,7 +89,17 @@ class ClipExtractor:
     def get_output_file_path(self, clip, input_file_path):
         source_file_name = os.path.splitext(os.path.basename(input_file_path))[0]
         output_file_name = self.arguments.name_pattern.replace('{source}', source_file_name).replace('{name}', clip.name).replace('{start_time}', clip.start_time).replace('{end_time}', clip.end_time)
-        return os.path.join(self.arguments.output, output_file_name)
+        output_file_path = os.path.join(self.arguments.output, output_file_name)
+        output_file_path = self.index_output_file_path(output_file_path)
+        return output_file_path
+
+    def index_output_file_path(self, output_file_path):
+        path, extention = os.path.splitext(output_file_path)
+        index = 0
+        while os.path.isfile(output_file_path):
+            index += 1
+            output_file_path = f'{path}_{index:03}{extention}'
+        return output_file_path
 
     def convert_clip(self, clip, input_file_path, output_file_path):
         ffmpeg_extract_subclip(input_file_path,
