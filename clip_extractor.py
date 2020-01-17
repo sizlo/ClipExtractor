@@ -15,6 +15,8 @@ def parse_arguments():
     parser.add_argument('--output', type=str, help='Output folder to create clips in', required=True)
     parser.add_argument('--name-pattern', type=str, default='{name}.mp4',
         help='Pattern used for the clip filenames. Allowed tokens are "{source}", "{name}", "{start_time}" and "{end_time}"')
+    parser.add_argument('--encoding-mode', choices=['copy-codecs', 're-encode'], default='re-encode',
+        help='The mode ffmpeg uses to encode the output clips, copy-codecs is faster but may cause issues with some video players')
     parser.add_argument('--verbose', dest='verbose', action='store_true', help='Show ffmpeg output')
     parser.set_defaults(verbose=False)
     return parser.parse_args()
@@ -58,7 +60,7 @@ class ClipExtractor:
         self.write_manifest()
 
     def find_meta_files(self, source_folder):
-        return glob.glob(source_folder + '**/*.clips', recursive=True)
+        return glob.glob(os.path.join(source_folder, '**/*.clips'), recursive=True)
 
     def process_files(self, files):
         for file in files:
@@ -107,10 +109,12 @@ class ClipExtractor:
     def convert_clip(self, clip, input_file_path, output_file_path):
         start_seconds = timestamp_to_seconds(clip.start_time)
         end_seconds = timestamp_to_seconds(clip.end_time) + 1
-        command = ['ffmpeg', '-i', input_file_path,  '-ss', str(start_seconds) , '-to', str(end_seconds), output_file_path]
+        command = ['ffmpeg', '-i', input_file_path,  '-ss', str(start_seconds) , '-to', str(end_seconds)]
+        if self.arguments.encoding_mode == 'copy-codecs':
+            command += ['-vcodec', 'copy', '-acodec', 'copy']
         if not self.arguments.verbose:
-            command.append('-v')
-            command.append('quiet')
+            command += ['-v', 'quiet']
+        command.append(output_file_path)
         subprocess.run(command)
 
     def write_manifest(self):
