@@ -3,7 +3,8 @@
 import argparse
 import glob
 import os
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+import ffmpeg
+import subprocess
 
 def LOG(message):
     print(message)
@@ -102,10 +103,11 @@ class ClipExtractor:
         return output_file_path
 
     def convert_clip(self, clip, input_file_path, output_file_path):
-        ffmpeg_extract_subclip(input_file_path,
-            timestamp_to_seconds(clip.start_time),
-            timestamp_to_seconds(clip.end_time),
-            targetname=output_file_path)
+        start_seconds = timestamp_to_seconds(clip.start_time)
+        end_seconds = timestamp_to_seconds(clip.end_time) + 1
+        command = ['ffmpeg', '-i', input_file_path,  '-ss', str(start_seconds) , '-to', str(end_seconds), output_file_path]
+        subprocess.call(command)
+
 
     def write_manifest(self):
         with open(os.path.join(self.arguments.output, 'manifest.txt'), 'w') as file:

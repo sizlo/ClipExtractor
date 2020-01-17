@@ -10,9 +10,9 @@ Each clips file consists of lines of clip definitions. A clip definition is a na
 A manifest file will also be written with the video clips which lists the source video, start timestamp and end timestamp for each clip.
 
 # Dependencies
-This tool uses [moviepy](https://github.com/Zulko/moviepy).
+This tool runs [ffmpeg](https://www.ffmpeg.org/) commands. To install with brew use:
 
-`pip3 install moviepy`
+`brew install ffmpeg`
 
 # Usage
 `./clip_extractor.py --source SOURCE_FOLDER --output OUTPUT_FOLDER [--name-pattern NAME_PATTERN]`
