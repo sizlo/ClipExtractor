@@ -15,13 +15,15 @@ This tool runs [ffmpeg](https://www.ffmpeg.org/) commands. To install with brew 
 `brew install ffmpeg`
 
 # Usage
-`./clip_extractor.py --source SOURCE_FOLDER --output OUTPUT_FOLDER [--name-pattern NAME_PATTERN]`
+`./clip_extractor.py --source SOURCE_FOLDER --output OUTPUT_FOLDER [--name-pattern NAME_PATTERN] [--verbose]`
 
 `SOURCE_FOLDER` is the folder which will be searched recursively for `.clips` files.
 
 `OUTPUT_FOLDER` is the folder where the clips and manifest file will be written.
 
 `NAME_PATTERN` is an optional pattern which will be used when creating the clip file names. The tokens `{source}`, `{name}`, `{start_time}` and `{end_time}` will be replaced with the source video file name, the name of the clip, the start time stamp of the clip and the end time stamp of the clip respectively. The default is `{name}.mp4`.
+
+`--verbose` is used to show the output of ffmpeg, which is hidden by default.
 
 # Example
 `./clip_extractor.py --source ~/Videos/MySnowboardingHoliday --output ~/Videos/SnowboardingClips`

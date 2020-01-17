@@ -15,6 +15,8 @@ def parse_arguments():
     parser.add_argument('--output', type=str, help='Output folder to create clips in', required=True)
     parser.add_argument('--name-pattern', type=str, default='{name}.mp4',
         help='Pattern used for the clip filenames. Allowed tokens are "{source}", "{name}", "{start_time}" and "{end_time}"')
+    parser.add_argument('--verbose', dest='verbose', action='store_true', help='Show ffmpeg output')
+    parser.set_defaults(verbose=False)
     return parser.parse_args()
 
 def timestamp_to_seconds(time_stamp):
@@ -106,8 +108,10 @@ class ClipExtractor:
         start_seconds = timestamp_to_seconds(clip.start_time)
         end_seconds = timestamp_to_seconds(clip.end_time) + 1
         command = ['ffmpeg', '-i', input_file_path,  '-ss', str(start_seconds) , '-to', str(end_seconds), output_file_path]
-        subprocess.call(command)
-
+        if not self.arguments.verbose:
+            command.append('-v')
+            command.append('quiet')
+        subprocess.run(command)
 
     def write_manifest(self):
         with open(os.path.join(self.arguments.output, 'manifest.txt'), 'w') as file:
