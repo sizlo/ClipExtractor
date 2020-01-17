@@ -3,7 +3,6 @@
 import argparse
 import glob
 import os
-import ffmpeg
 import subprocess
 
 def LOG(message):
