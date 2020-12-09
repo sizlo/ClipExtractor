@@ -10,13 +10,13 @@ def LOG(message):
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--source', type=str, help='Source folder to process', required=True)
-    parser.add_argument('--output', type=str, help='Output folder to create clips in', required=True)
+    parser.add_argument('-s', '--source', type=str, help='Source folder to process', required=True)
+    parser.add_argument('-o', '--output', type=str, help='Output folder to create clips in', required=True)
     parser.add_argument('--name-pattern', type=str, default='{name}.mp4',
         help='Pattern used for the clip filenames. Allowed tokens are "{source}", "{name}", "{start_time}" and "{end_time}"')
-    parser.add_argument('--encoding-mode', choices=['copy-codecs', 're-encode'], default='re-encode',
+    parser.add_argument('-e', '--encoding-mode', choices=['copy-codecs', 're-encode'], default='re-encode',
         help='The mode ffmpeg uses to encode the output clips, copy-codecs is faster but may cause issues with some video players')
-    parser.add_argument('--verbose', dest='verbose', action='store_true', help='Show ffmpeg output')
+    parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='Show ffmpeg output')
     parser.set_defaults(verbose=False)
     return parser.parse_args()
 
