@@ -78,7 +78,7 @@ class ClipExtractor:
         return [Clip(line) for line in lines]
 
     def find_video_file(self, meta_file_path):
-        extentions_to_try = ['.mp4', '.mov']
+        extentions_to_try = ['.mp4', '.mov', '.MP4', '.MOV']
         for extention in extentions_to_try:
             video_file_path = os.path.splitext(meta_file_path)[0] + extention
             if os.path.isfile(video_file_path):
