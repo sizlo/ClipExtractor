@@ -37,6 +37,8 @@ You can run this tool locally by installing Python and ffmpeg using the dependen
 Alternatively this tool has been adapted slightly to run inside a docker container. This removes the requirement to install Python and ffmpeg locally and can be run inside the container instead. For this to work you need to bind a volume in docker (using the -v) and pairing your local directory to another one mounted in the docker machine. You can then run these through and write files. The only downside to running it this way is that the output need to go inside the main videos folder, although this can be put inside a subfolder if desired.
 
 ### Example
-In order to run this in docker you can use the following command as an example:
+In order to build the docker image you can run the following:
+`docker build . -t clip-extractor`
 
-`docker run -v ABSOLUTE_PATH_TO_VIDEOS_LOCALLY:/videos jaymehs/clip-extractor -o /videos/output -s /videos -e copy-codecs -v`
+Then finally you can run the script to extract clips from your footage:
+`docker run -v ~/Videos/MySnowboardingHoliday:/videos clip-extractor -o /videos/output -s /videos`
